@@ -532,8 +532,7 @@ export default function SurveyDashboard() {
 								Phạm vi tra cứu
 							</p>
 							<p className="mt-1 text-xs text-gray-500">
-								Chọn bao nhiêu tiêu chí cũng được. Sau khi chọn khoa hoặc môn
-								học, danh sách môn học và lớp sẽ tự thu gọn theo lựa chọn đó.
+								Chọn tiêu chí muốn xem.
 							</p>
 							{breadcrumb.length > 0 ? (
 								<p className="mt-2 text-xs text-primary">
