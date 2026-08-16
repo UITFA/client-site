@@ -159,76 +159,33 @@ const EMPTY_FACETS: Facets = {
 	sentiments: ["positive", "negative", "neutral"],
 };
 
-const FILTER_TREE: Array<{
+const FILTER_FIELDS: Array<{
 	key: keyof Filters;
 	label: string;
 	facetKey: keyof Facets;
-	dependsOn: Array<keyof Filters>;
-	requires: string;
 }> = [
-	{
-		key: "academic_year",
-		label: "Năm học",
-		facetKey: "academic_years",
-		dependsOn: [],
-		requires: "",
-	},
-	{
-		key: "semester",
-		label: "Học kỳ",
-		facetKey: "semesters",
-		dependsOn: ["academic_year"],
-		requires: "năm học",
-	},
-	{
-		key: "faculty",
-		label: "Khoa",
-		facetKey: "faculties",
-		dependsOn: ["academic_year", "semester"],
-		requires: "học kỳ",
-	},
-	{
-		key: "course",
-		label: "Môn học",
-		facetKey: "courses",
-		dependsOn: ["academic_year", "semester", "faculty"],
-		requires: "khoa",
-	},
-	{
-		key: "class_name",
-		label: "Lớp",
-		facetKey: "classes",
-		dependsOn: ["academic_year", "semester", "faculty", "course"],
-		requires: "môn học",
-	},
-	{
-		key: "aspect",
-		label: "Khía cạnh",
-		facetKey: "aspects",
-		dependsOn: ["academic_year", "semester", "faculty", "course", "class_name"],
-		requires: "lớp",
-	},
-	{
-		key: "sentiment",
-		label: "Cảm xúc",
-		facetKey: "sentiments",
-		dependsOn: [
-			"academic_year",
-			"semester",
-			"faculty",
-			"course",
-			"class_name",
-			"aspect",
-		],
-		requires: "khía cạnh",
-	},
+	{ key: "academic_year", label: "Năm học", facetKey: "academic_years" },
+	{ key: "semester", label: "Học kỳ", facetKey: "semesters" },
+	{ key: "faculty", label: "Khoa", facetKey: "faculties" },
+	{ key: "course", label: "Môn học", facetKey: "courses" },
+	{ key: "class_name", label: "Lớp", facetKey: "classes" },
+	{ key: "aspect", label: "Khía cạnh", facetKey: "aspects" },
+	{ key: "sentiment", label: "Cảm xúc", facetKey: "sentiments" },
 ];
 
-function childKeysOf(parent: keyof Filters): Array<keyof Filters> {
-	const order = FILTER_TREE.map((item) => item.key);
-	const index = order.indexOf(parent);
+// Only the organisational chain is nested, so changing one of these levels
+// drops the narrower selections that may no longer exist underneath it.
+const NARROWING_CHAIN: Array<keyof Filters> = [
+	"academic_year",
+	"faculty",
+	"course",
+	"class_name",
+];
+
+function narrowerKeysOf(key: keyof Filters): Array<keyof Filters> {
+	const index = NARROWING_CHAIN.indexOf(key);
 	if (index < 0) return [];
-	return order.slice(index + 1);
+	return NARROWING_CHAIN.slice(index + 1);
 }
 
 export default function SurveyDashboard() {
@@ -284,7 +241,7 @@ export default function SurveyDashboard() {
 	}, [filters]);
 
 	const breadcrumb = useMemo(() => {
-		return FILTER_TREE.filter((item) => filters[item.key]).map((item) => {
+		return FILTER_FIELDS.filter((item) => filters[item.key]).map((item) => {
 			const raw = filters[item.key];
 			const label =
 				item.key === "aspect"
@@ -336,18 +293,14 @@ export default function SurveyDashboard() {
 		loadDashboard();
 	}, [loadDashboard]);
 
-	function updateTreeFilter(key: keyof Filters, value: string) {
+	function updateFilter(key: keyof Filters, value: string) {
 		setFilters((current) => {
 			const next: Filters = { ...current, [key]: value };
-			for (const child of childKeysOf(key)) {
-				next[child] = "";
+			for (const narrower of narrowerKeysOf(key)) {
+				next[narrower] = "";
 			}
 			return next;
 		});
-	}
-
-	function isLevelEnabled(dependsOn: Array<keyof Filters>) {
-		return dependsOn.every((key) => Boolean(filters[key]));
 	}
 
 	const totals = useMemo(() => {
@@ -579,12 +532,12 @@ export default function SurveyDashboard() {
 								Phạm vi tra cứu
 							</p>
 							<p className="mt-1 text-xs text-gray-500">
-								Thu hẹp dần từ năm học, học kỳ, khoa, môn học đến lớp, rồi chọn
-								khía cạnh và cảm xúc muốn xem.
+								Chọn bao nhiêu tiêu chí cũng được. Sau khi chọn khoa hoặc môn
+								học, danh sách môn học và lớp sẽ tự thu gọn theo lựa chọn đó.
 							</p>
 							{breadcrumb.length > 0 ? (
 								<p className="mt-2 text-xs text-primary">
-									{breadcrumb.join(" / ")}
+									{breadcrumb.join(" · ")}
 								</p>
 							) : (
 								<p className="mt-2 text-xs text-gray-400">
@@ -607,32 +560,24 @@ export default function SurveyDashboard() {
 								/>
 							</Field>
 
-							{FILTER_TREE.map((item) => {
-								const enabled = isLevelEnabled(item.dependsOn);
-								const options = facets[item.facetKey] || [];
-								return (
-									<FilterSelect
-										key={item.key}
-										label={item.label}
-										value={filters[item.key]}
-										options={options}
-										disabled={!enabled}
-										placeholder={
-											enabled ? "Tất cả" : `Chọn ${item.requires} trước`
-										}
-										renderLabel={
-											item.key === "aspect"
-												? (value) => ASPECT_LABELS[value] || value
-												: item.key === "sentiment"
-												? (value) => SENTIMENT_LABELS[value] || value
-												: item.key === "semester"
-												? (value) => `HK ${value}`
-												: undefined
-										}
-										onChange={(value) => updateTreeFilter(item.key, value)}
-									/>
-								);
-							})}
+							{FILTER_FIELDS.map((item) => (
+								<FilterSelect
+									key={item.key}
+									label={item.label}
+									value={filters[item.key]}
+									options={facets[item.facetKey] || []}
+									renderLabel={
+										item.key === "aspect"
+											? (value) => ASPECT_LABELS[value] || value
+											: item.key === "sentiment"
+											? (value) => SENTIMENT_LABELS[value] || value
+											: item.key === "semester"
+											? (value) => `HK ${value}`
+											: undefined
+									}
+									onChange={(value) => updateFilter(item.key, value)}
+								/>
+							))}
 
 							<div className="flex flex-row gap-3 md:col-span-2 xl:col-span-4">
 								<Button color="primary" type="submit" className="rounded-lg">
@@ -712,7 +657,18 @@ export default function SurveyDashboard() {
 					) : null}
 				</Card>
 
-				<Modal isOpen={importOpen} onOpenChange={onImportOpenChange} size="md">
+				<Modal
+					isOpen={importOpen}
+					onOpenChange={onImportOpenChange}
+					size="md"
+					backdrop="blur"
+					classNames={{
+						backdrop: "bg-gray-900/50",
+						base: "border border-default-200 shadow-2xl",
+						header: "border-b border-default-100",
+						footer: "border-t border-default-100",
+					}}
+				>
 					<ModalContent>
 						{(onClose) => (
 							<>
@@ -970,7 +926,6 @@ function FilterSelect({
 	options,
 	onChange,
 	renderLabel,
-	disabled = false,
 	placeholder = "Tất cả",
 }: {
 	label: string;
@@ -978,24 +933,22 @@ function FilterSelect({
 	options: string[];
 	onChange: (value: string) => void;
 	renderLabel?: (value: string) => string;
-	disabled?: boolean;
 	placeholder?: string;
 }) {
+	// A selection can fall outside the narrowed list; keep it visible so the
+	// dropdown never renders blank while the value is still applied.
+	const items = value && !options.includes(value) ? [value, ...options] : options;
+
 	return (
 		<Field label={label}>
 			<select
 				aria-label={label}
 				value={value}
-				disabled={disabled}
 				onChange={(event) => onChange(event.target.value)}
-				className={`h-8 w-full rounded-medium border-2 bg-transparent px-2 text-small outline-none transition-colors ${
-					disabled
-						? "cursor-not-allowed border-default-100 text-default-400"
-						: "border-default-200 text-foreground hover:border-default-400 focus:border-default-foreground"
-				}`}
+				className="h-8 w-full rounded-medium border-2 border-default-200 bg-transparent px-2 text-small text-foreground outline-none transition-colors hover:border-default-400 focus:border-default-foreground"
 			>
 				<option value="">{placeholder}</option>
-				{options.map((option) => (
+				{items.map((option) => (
 					<option key={option} value={option}>
 						{renderLabel ? renderLabel(option) : option}
 					</option>
