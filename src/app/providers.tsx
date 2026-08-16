@@ -13,7 +13,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
 	return (
 		<NextUIProvider>
-			<NextThemesProvider attribute="class" defaultTheme="dark">
+			<NextThemesProvider
+				attribute="class"
+				defaultTheme="light"
+				enableSystem={false}
+				storageKey="uitfa-theme"
+			>
 				<QueryClientProvider client={queryClient}>
 					<ApolloProvider client={client}>{children}</ApolloProvider>
 				</QueryClientProvider>

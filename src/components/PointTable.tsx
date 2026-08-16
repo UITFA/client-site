@@ -12,7 +12,7 @@ import {
 } from "@nextui-org/react";
 
 interface IProps {
-	data: GroupedPoint[];
+	data: Pick<GroupedPoint, "id" | "display_name" | "average_point">[];
 }
 
 export default function PointTable({ data }: IProps) {
