@@ -164,42 +164,49 @@ const FILTER_TREE: Array<{
 	label: string;
 	facetKey: keyof Facets;
 	dependsOn: Array<keyof Filters>;
+	requires: string;
 }> = [
 	{
 		key: "academic_year",
 		label: "Năm học",
 		facetKey: "academic_years",
 		dependsOn: [],
+		requires: "",
 	},
 	{
 		key: "semester",
 		label: "Học kỳ",
 		facetKey: "semesters",
 		dependsOn: ["academic_year"],
+		requires: "năm học",
 	},
 	{
 		key: "faculty",
 		label: "Khoa",
 		facetKey: "faculties",
 		dependsOn: ["academic_year", "semester"],
+		requires: "học kỳ",
 	},
 	{
 		key: "course",
 		label: "Môn học",
 		facetKey: "courses",
 		dependsOn: ["academic_year", "semester", "faculty"],
+		requires: "khoa",
 	},
 	{
 		key: "class_name",
 		label: "Lớp",
 		facetKey: "classes",
 		dependsOn: ["academic_year", "semester", "faculty", "course"],
+		requires: "môn học",
 	},
 	{
 		key: "aspect",
 		label: "Khía cạnh",
 		facetKey: "aspects",
 		dependsOn: ["academic_year", "semester", "faculty", "course", "class_name"],
+		requires: "lớp",
 	},
 	{
 		key: "sentiment",
@@ -213,6 +220,7 @@ const FILTER_TREE: Array<{
 			"class_name",
 			"aspect",
 		],
+		requires: "khía cạnh",
 	},
 ];
 
@@ -446,7 +454,7 @@ export default function SurveyDashboard() {
 
 	async function submitImport() {
 		if (!importFile) {
-			setImportMessage("Vui lòng chọn file .xlsx");
+			setImportMessage("Vui lòng chọn file Excel");
 			return;
 		}
 		setImportBusy(true);
@@ -461,29 +469,29 @@ export default function SurveyDashboard() {
 			const response = await fetch(endpoint, { method: "POST", body });
 			const json = await response.json().catch(() => ({}));
 			if (!response.ok) {
-				throw new Error(json.detail || json.error || "Import thất bại");
+				throw new Error(json.detail || json.error || "Tải lên thất bại");
 			}
 			if (json.message === "File already imported") {
 				setImportMessage(
-					`File đã import trước đó (${json.file_name || importFile.name}).`,
+					`File này đã được nhập trước đó (${json.file_name || importFile.name}).`,
 				);
 			} else if (importKind === "raw") {
 				setImportMessage(
-					`Đã import ${json.inserted ?? 0}/${json.parsed ?? 0} bản ghi (${json.use_case}).`,
+					`Đã thêm ${json.inserted ?? 0} bản ghi mới trên tổng ${json.parsed ?? 0} dòng đọc được.`,
 				);
 			} else {
 				setImportMessage(
-					`Cập nhật nhãn: ${json.updated ?? 0}, bỏ qua: ${json.skipped ?? 0}.`,
+					`Đã cập nhật nhãn cho ${json.updated ?? 0} bình luận, bỏ qua ${json.skipped ?? 0}.`,
 				);
 			}
 			setImportFile(null);
 			await loadDashboard();
-			setActionMessage("Dữ liệu đã được làm mới sau import.");
+			setActionMessage("Đã làm mới dữ liệu hiển thị.");
 		} catch (importError) {
 			setImportMessage(
 				importError instanceof Error
 					? importError.message
-					: "Import thất bại",
+					: "Tải lên thất bại",
 			);
 		} finally {
 			setImportBusy(false);
@@ -496,26 +504,26 @@ export default function SurveyDashboard() {
 		try {
 			const response = await fetch(`${API_URL}/export?mode=${mode}`);
 			if (!response.ok) {
-				throw new Error("Export thất bại");
+				throw new Error("Không tải được file");
 			}
 			const blob = await response.blob();
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.href = url;
 			link.download =
-				mode === "labeling" ? "labeling_data.xlsx" : "training_data.xlsx";
+				mode === "labeling" ? "du_lieu_tho.xlsx" : "du_lieu_gan_nhan.xlsx";
 			link.click();
 			URL.revokeObjectURL(url);
 			setActionMessage(
 				mode === "labeling"
-					? "Đã tải file gắn nhãn (chưa labeled)."
-					: "Đã tải file training (đã labeled).",
+					? "Đã tải file dữ liệu thô, sẵn sàng để gán nhãn."
+					: "Đã tải file dữ liệu đã gán nhãn.",
 			);
 		} catch (exportError) {
 			setActionMessage(
 				exportError instanceof Error
 					? exportError.message
-					: "Không thể export",
+					: "Không tải được file",
 			);
 		} finally {
 			setExportBusy("");
@@ -531,15 +539,17 @@ export default function SurveyDashboard() {
 			});
 			const json = await response.json().catch(() => ({}));
 			if (!response.ok) {
-				throw new Error(json.detail || "Chạy model thất bại");
+				throw new Error(json.detail || "Phân loại tự động thất bại");
 			}
-			setActionMessage(`Model đã cập nhật ${json.updated ?? 0} bình luận.`);
+			setActionMessage(
+				`Đã phân loại thêm ${json.updated ?? 0} bình luận chưa có nhãn.`,
+			);
 			await loadDashboard();
 		} catch (predictError) {
 			setActionMessage(
 				predictError instanceof Error
 					? predictError.message
-					: "Chạy model thất bại",
+					: "Phân loại tự động thất bại",
 			);
 		} finally {
 			setPredictBatchBusy(false);
@@ -555,8 +565,8 @@ export default function SurveyDashboard() {
 							Khảo sát chất lượng giảng dạy
 						</h1>
 						<p className="mt-2 text-gray-500">
-							Tra cứu bình luận theo học kỳ, theo dõi cảm xúc từng khía cạnh
-							và thử trực tiếp mô hình PhoBERT ABSA.
+							Tra cứu ý kiến sinh viên theo học kỳ và theo dõi cảm xúc ở từng
+							khía cạnh của môn học.
 						</p>
 					</div>
 					<ThemeSwitcher />
@@ -566,11 +576,11 @@ export default function SurveyDashboard() {
 					<CardBody className="gap-4">
 						<div>
 							<p className="text-sm font-medium text-gray-700 dark:text-gray-200">
-								Bộ lọc dạng cây
+								Phạm vi tra cứu
 							</p>
 							<p className="mt-1 text-xs text-gray-500">
-								Năm học → Học kỳ → Khoa → Môn → Lớp → Khía cạnh → Cảm xúc.
-								Chọn cấp trên mới mở được cấp dưới.
+								Thu hẹp dần từ năm học, học kỳ, khoa, môn học đến lớp, rồi chọn
+								khía cạnh và cảm xúc muốn xem.
 							</p>
 							{breadcrumb.length > 0 ? (
 								<p className="mt-2 text-xs text-primary">
@@ -578,7 +588,7 @@ export default function SurveyDashboard() {
 								</p>
 							) : (
 								<p className="mt-2 text-xs text-gray-400">
-									Chưa chọn nhánh nào — đang xem toàn bộ dữ liệu.
+									Đang xem toàn bộ dữ liệu.
 								</p>
 							)}
 						</div>
@@ -597,18 +607,18 @@ export default function SurveyDashboard() {
 								/>
 							</Field>
 
-							{FILTER_TREE.map((item, index) => {
+							{FILTER_TREE.map((item) => {
 								const enabled = isLevelEnabled(item.dependsOn);
 								const options = facets[item.facetKey] || [];
 								return (
 									<FilterSelect
 										key={item.key}
-										label={`${index + 1}. ${item.label}`}
+										label={item.label}
 										value={filters[item.key]}
 										options={options}
 										disabled={!enabled}
 										placeholder={
-											enabled ? "Tất cả" : "Chọn cấp trên trước"
+											enabled ? "Tất cả" : `Chọn ${item.requires} trước`
 										}
 										renderLabel={
 											item.key === "aspect"
@@ -657,7 +667,7 @@ export default function SurveyDashboard() {
 								openImport();
 							}}
 						>
-							Import Excel
+							Nhập dữ liệu khảo sát
 						</Button>
 						<Button
 							variant="flat"
@@ -669,7 +679,7 @@ export default function SurveyDashboard() {
 								openImport();
 							}}
 						>
-							Import đã gắn nhãn
+							Nhập dữ liệu đã gán nhãn
 						</Button>
 						<Button
 							variant="bordered"
@@ -677,7 +687,7 @@ export default function SurveyDashboard() {
 							isLoading={exportBusy === "labeling"}
 							onPress={() => downloadExport("labeling")}
 						>
-							Export gắn nhãn
+							Xuất dữ liệu thô
 						</Button>
 						<Button
 							variant="bordered"
@@ -685,7 +695,7 @@ export default function SurveyDashboard() {
 							isLoading={exportBusy === "training"}
 							onPress={() => downloadExport("training")}
 						>
-							Export training
+							Xuất dữ liệu đã gán nhãn
 						</Button>
 						<Button
 							color="secondary"
@@ -694,7 +704,7 @@ export default function SurveyDashboard() {
 							isLoading={predictBatchBusy}
 							onPress={runBatchPredict}
 						>
-							Chạy model (200)
+							Phân loại tự động
 						</Button>
 					</CardBody>
 					{actionMessage ? (
@@ -708,14 +718,14 @@ export default function SurveyDashboard() {
 							<>
 								<ModalHeader>
 									{importKind === "raw"
-										? "Import file Excel khảo sát"
-										: "Import file đã gắn nhãn"}
+										? "Nhập dữ liệu khảo sát"
+										: "Nhập dữ liệu đã gán nhãn"}
 								</ModalHeader>
 								<ModalBody className="gap-3">
 									<p className="text-sm text-gray-500">
 										{importKind === "raw"
-											? "Hỗ trợ TongHopYKien_*.xlsx (ý kiến) hoặc Thongke_*.xlsx (bảng thống kê). Hệ thống tự nhận diện."
-											: "File Excel có cột _id, sentiment, aspect để cập nhật nhãn thủ công."}
+											? "Chọn file khảo sát xuất từ hệ thống: bảng ý kiến sinh viên hoặc bảng thống kê điểm. Hệ thống tự nhận dạng loại file."
+											: "Chọn file đã gán nhãn thủ công (giữ nguyên cột mã bình luận, khía cạnh và cảm xúc) để cập nhật lại vào dữ liệu."}
 									</p>
 									<input
 										type="file"
@@ -780,7 +790,7 @@ export default function SurveyDashboard() {
 				</div>
 
 				<h2 className="mt-10 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-					Điểm đánh giá tổng quan
+					Tổng quan cảm xúc
 				</h2>
 				<div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 					<Card className="xl:col-span-2" shadow="sm">
@@ -910,7 +920,9 @@ export default function SurveyDashboard() {
 					<Card className="h-fit" shadow="sm">
 						<CardHeader className="flex flex-col items-start pb-0">
 							<p className="font-medium">Thử phân loại</p>
-							<p className="mt-1 text-sm text-gray-500">PhoBERT ABSA v2</p>
+							<p className="mt-1 text-sm text-gray-500">
+								Nhập một bình luận để xem khía cạnh và cảm xúc được nhận diện.
+							</p>
 						</CardHeader>
 						<CardBody className="gap-3">
 							<Textarea
