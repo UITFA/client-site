@@ -1,29 +1,13 @@
 query CommentQuantity($filter: FilterArgs) {
-	positive: commentQuantity(type: "positive", filter: $filter) {
-		quantity
-		sentiment
-		aspect
-	}
-	negative: commentQuantity(type: "negative", filter: $filter) {
-		quantity
-		sentiment
-		aspect
-	}
-	all: commentQuantity(filter: $filter) {
+	commentQuantity(filter: $filter) {
 		quantity
 		sentiment
 		aspect
 	}
 }
 
-query CommentList($filter: FilterArgs, $page: Int, $sort: SortArgs, $type: String) {
-	comments(
-		filter: $filter
-		pagination: { page: $page }
-		sort: $sort
-		sentiment: $sentiment
-		aspect: $aspect
-	) {
+query CommentList($filter: FilterArgs, $page: Int, $sort: SortArgs) {
+	comments(filter: $filter, pagination: { page: $page }, sort: $sort) {
 		data {
 			comment_id
 			content

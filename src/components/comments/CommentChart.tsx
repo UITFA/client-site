@@ -2,7 +2,7 @@ import React from "react";
 import { Comment } from "./interfaces/IComment";
 import CombinedBarLineChart from "./GroupedStackedBarChart";
 
-const CommentChart = ({ response }: { response: { data: Comment[] } }) => {
+const CommentChart = ({ response }: { response: { data: [] } }) => {
 	const data = response.data;
 
 	return (

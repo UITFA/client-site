@@ -599,12 +599,13 @@ export type CommentListQueryVariables = Exact<{
 	sort?: InputMaybe<SortArgs>;
 	type?: InputMaybe<Scalars["String"]["input"]>;
 	aspect?: InputMaybe<Scalars["String"]["input"]>;
-	sentitment?: InputMaybe<Scalars["String"]["input"]>;
+	sentiment?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type CommentListQuery = {
 	aspect: string;
 	sentiment: string;
+	display_name: string;
 	__typename?: "Query";
 	comments: {
 		__typename?: "PaginatedComment";
@@ -613,8 +614,8 @@ export type CommentListQuery = {
 			comment_id: number;
 			content: string;
 			type: string;
-			sentiment: String;
-			aspect: String;
+			sentiment: string;
+			aspect: string;
 			class?: {
 				__typename?: "Class";
 				class_id: number;
@@ -1566,22 +1567,11 @@ export function refetchCommentQuantityQuery(
 	return { query: CommentQuantityDocument, variables: variables };
 }
 export const CommentListDocument = gql`
-	query CommentList(
-		$filter: FilterArgs
-		$page: Int
-		$sort: SortArgs
-		$type: String
-	) {
-		comments(
-			filter: $filter
-			pagination: { page: $page }
-			sort: $sort
-			type: $type
-		) {
+	query CommentList($filter: FilterArgs, $page: Int, $sort: SortArgs) {
+		comments(filter: $filter, pagination: { page: $page }, sort: $sort) {
 			data {
 				comment_id
 				display_name
-				type
 				class {
 					class_id
 					class_type

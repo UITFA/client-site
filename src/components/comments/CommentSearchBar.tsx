@@ -1,7 +1,9 @@
 "use client";
 
+import { useFilter } from "@/contexts/FilterContext";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CommentSearchBar({
 	isLoading,

@@ -48,7 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						icon={CriteriaIcon}
 					/>
 				) : null}
-				{isAdmin ? (
+				{isAdmin || isFullAcess ? (
 					<NavItem
 						title="Quản lý tài khoản"
 						link="/user"

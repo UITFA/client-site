@@ -20,17 +20,18 @@ import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 
 export default function CommentItem({
 	content,
-	type,
+	sentiment,
 	classData,
 	aspect,
 }: {
 	content: string;
 	type: string;
-	comment_id: string;
-	class_id?: string;
+	comment_id: number;
+	class_id?: number;
 	isLast: boolean;
 	classData?: DeepPartial<Class> | null;
 	aspect?: string;
+	sentiment?: string;
 }) {
 	const { setUrlQuery } = useFilterUrlQuery();
 	const [isOpen, setIsOpen] = useState(false);
@@ -51,31 +52,19 @@ export default function CommentItem({
 						{content}
 					</p>
 					<div className="ml-auto w-fit pl-5 flex shrink-0 flex-row gap-5">
-						{/* <Card
-							isPressable
-							shadow="sm"
-							className="p-3 flex flex-row justify-center items-center"
-						>
-							<Image
-								src={COPY_ICON}
-								width={18}
-								height={18}
-								alt="Copy comment"
-							/>
-						</Card> */}
 						<Card
 							isPressable
 							shadow="sm"
 							className={`px-2 py-1 w-24 grid items-center ${
-								type === "positive"
+								sentiment === "positive"
 									? "bg-green-300 dark:bg-green-700"
 									: "bg-red-300 dark:bg-red-700"
 							}`}
 						>
 							<p className=" capitalize font-medium text-sm py-1">
-								{type === "positive"
+								{sentiment === "positive"
 									? "Tích cực"
-									: type === "negative"
+									: sentiment === "negative"
 									? "Tiêu cực"
 									: "Trung tính"}
 							</p>
@@ -134,15 +123,6 @@ export default function CommentItem({
 											);
 										}}
 									/>
-									{/* <CommentModalItem
-										title="Test Aspect"
-										value={aspect}
-										onClick={() => {
-											setUrlQuery(
-												`/${classData?.lecturer?.lecturer_id}`
-											);
-										}}
-									/> */}
 								</div>
 							</ModalBody>
 							<ModalFooter>

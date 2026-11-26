@@ -71,15 +71,16 @@ function Inner({ defaultFilter, selectors }: Props) {
 			/>
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
-					({ comment_id, content: content, type, class: class_ }) => (
+					({ comment_id, content: content, sentiment, class: class_ }) => (
 						<CommentItem
 							key={comment_id}
 							content={content}
-							type={type}
+							sentiment={sentiment}
 							comment_id={comment_id}
 							class_id={class_?.class_id}
 							isLast={false}
 							classData={class_}
+							aspect={class_?.aspect}
 						/>
 					)
 				)}
