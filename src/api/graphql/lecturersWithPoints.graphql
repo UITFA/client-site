@@ -27,6 +27,7 @@ query LecturerstWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {
 				max_point
 				point
 				display_name
+				mscb
 			}
 		}
 		meta {

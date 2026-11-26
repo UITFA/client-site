@@ -17,10 +17,10 @@ import ChartLayout from "@components/chart/ChartLayout";
 import ProgramSelector from "@components/selectors/ProgramSelector";
 import SemesterSelector from "@components/selectors/SemesterSelector";
 import { Color } from "@tremor/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDeepCompareEffect } from "react-use";
 
-function Page_({ subject_id }: { subject_id: string }) {
+function Page_({ subject_id }: { subject_id: number }) {
 	const { sort } = useFilter();
 
 	const { query, setUrlQuery } = useFilterUrlQuery();
@@ -31,7 +31,6 @@ function Page_({ subject_id }: { subject_id: string }) {
 
 	const subjects = useMemo(
 		() => Array.from(filter.subjects.values()),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[JSON.stringify(Array.from(filter.subjects.values()))]
 	);
 
@@ -109,7 +108,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 										label: LEGEND_NAMES[1],
 										data:
 											data?.map((d) => ({
-												x: d.display_name || "",
+												x: d.id || "",
 												y: d.class_num as number,
 												type: "line",
 												id: d.id,
@@ -123,7 +122,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 										label: LEGEND_NAMES[0],
 										data:
 											data?.map((d) => ({
-												x: d.display_name || "",
+												x: d.id || "",
 												y: (d.average_point * 4).toFixed(2),
 												id: d.id,
 											})) || [],
@@ -135,7 +134,6 @@ function Page_({ subject_id }: { subject_id: string }) {
 					valueFormatter={[dataFormatter, (d: any) => d]}
 					noDataText={loading ? <Loading /> : <NoData />}
 					onClick={({ index, data }) =>
-						// router.push(`/lecturer/${data[0]?.id}`)
 						setUrlQuery(`/lecturer/${data[0]?.id}`)
 					}
 				/>

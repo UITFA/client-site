@@ -10,7 +10,7 @@ export default function DetailClassPage({
 	params: { id },
 	children,
 }: {
-	params: { id: string };
+	params: { id: number };
 	children: ReactNode;
 }) {
 	// const response = await fetch(GET_CLASS_INFORMATION(params.id));

@@ -224,13 +224,13 @@ export default function BreadCrumb() {
 						currentPage !== "subject" ? `${currentPage}_id` : "subjects";
 
 					setUrlQuery(pathname, {
-						criteria_id: "",
-						semester_id: "",
-						faculty_id: "",
+						criteria_id: null,
+						semester_id: null,
+						faculty_id: null,
 						subjects: undefined,
-						lecturer_id: "",
+						lecturer_id: null,
 						class_type: "",
-						class_id: "",
+						class_id: null,
 						//@ts-expect-error
 						[currentPageKey]: query?.[currentPageKey] as any,
 					});

@@ -145,12 +145,6 @@ function InnerPointWithCompare({
 							xAxisHeight: 60,
 						}}
 						onValueChange={() => {}}
-						// onValueChange={(v) => {
-						// 	const item = data.find(
-						// 		(point) => point.display_name == v?.name
-						// 	);
-						// 	if (item) onClick?.(item);
-						// }}
 						showLegend
 						//@ts-ignore
 						noDataText={loading ? <Loading /> : <NoData />}

@@ -4,7 +4,7 @@ import PointTable from "@/components/PointTable";
 import { useDetailClassQuery } from "@/gql/graphql";
 import ClassDetail from "./ClassDetail";
 
-export default function Page({ params: { id } }: { params: { id: string } }) {
+export default function Page({ params: { id } }: { params: { id: number } }) {
 	// const response = await fetch(GET_CLASS_INFORMATION(params.id));
 	// const classInfo: ClassInfo = await response.json();
 	const { data: classData } = useDetailClassQuery({ variables: { id } });

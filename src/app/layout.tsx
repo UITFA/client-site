@@ -19,8 +19,6 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	try {
-		// const pingResponse = await fetch(API_BASE_URL);
-
 		return (
 			<html lang="en" suppressHydrationWarning>
 				<body className={inter.className}>
@@ -30,12 +28,6 @@ export default async function RootLayout({
 							<Toaster />
 						</div>
 					</Providers>
-					{/* {pingResponse.status == 200 ? (
-					) : (
-						<div className=" w-screen h-screen grid place-items-center">
-							Trang web đang bảo trì
-						</div>
-					)} */}
 				</body>
 			</html>
 		);

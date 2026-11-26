@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
+import { StringNullableChain } from "lodash";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -149,7 +150,7 @@ export type FilterArgs = {
 	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
 	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
-	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
+	subjects?: InputMaybe<Array<Scalars["Int"]["input"]>>;
 };
 
 export type GroupedPoint = {
@@ -157,7 +158,8 @@ export type GroupedPoint = {
 	average_point: Scalars["Float"]["output"];
 	class_num: Scalars["Int"]["output"];
 	display_name?: Maybe<Scalars["String"]["output"]>;
-	id: Scalars["String"]["output"];
+	id: Scalars["Int"]["output"];
+	mscb: Scalars["String"]["output"];
 	max_point?: Maybe<Scalars["Float"]["output"]>;
 	point?: Maybe<Scalars["Float"]["output"]>;
 };
@@ -174,7 +176,7 @@ export type Lecturer = {
 	learning?: Maybe<Scalars["String"]["output"]>;
 	learning_position?: Maybe<Scalars["String"]["output"]>;
 	lecturer_id: Scalars["Int"]["output"];
-	mscb?: Maybe<Scalars["Int"]["output"]>;
+	mscb?: Maybe<Scalars["String"]["output"]>;
 	ngach?: Maybe<Scalars["String"]["output"]>;
 	phone?: Maybe<Scalars["String"]["output"]>;
 	points: Array<GroupedPoint>;
@@ -520,7 +522,7 @@ export type DetailClassQuery = {
 			learning?: string | null;
 			learning_position?: string | null;
 			lecturer_id: number;
-			mscb?: number | null;
+			mscb?: string | null;
 			ngach?: string | null;
 			phone?: string | null;
 			position?: string | null;
@@ -569,14 +571,26 @@ export type CommentQuantityQuery = {
 		__typename?: "CommentQuantity";
 		quantity: number;
 		sentiment: string;
+		aspect: string;
 	};
 	negative: {
 		__typename?: "CommentQuantity";
 		quantity: number;
 		sentiment: string;
+		aspect: string;
 	};
-	neutral: { __typename?: "CommentQuantity"; quantity: number; sentiment: string };
-	all: { __typename?: "CommentQuantity"; quantity: number; sentiment: string };
+	neutral: {
+		__typename?: "CommentQuantity";
+		quantity: number;
+		sentiment: string;
+		aspect: string;
+	};
+	all: {
+		__typename?: "CommentQuantity";
+		quantity: number;
+		sentiment: string;
+		aspect: string;
+	};
 };
 
 export type CommentListQueryVariables = Exact<{
@@ -585,6 +599,7 @@ export type CommentListQueryVariables = Exact<{
 	sort?: InputMaybe<SortArgs>;
 	type?: InputMaybe<Scalars["String"]["input"]>;
 	aspect?: InputMaybe<Scalars["String"]["input"]>;
+	sentitment?: InputMaybe<Scalars["String"]["input"]>;
 }>;
 
 export type CommentListQuery = {
@@ -598,6 +613,8 @@ export type CommentListQuery = {
 			comment_id: number;
 			content: string;
 			type: string;
+			sentiment: String;
+			aspect: String;
 			class?: {
 				__typename?: "Class";
 				class_id: number;
@@ -617,7 +634,7 @@ export type CommentListQuery = {
 					learning_position?: string | null;
 					class_id: number;
 					lecturer_id: number;
-					mscb?: number | null;
+					mscb?: string | null;
 					ngach?: string | null;
 					phone?: string | null;
 					position?: string | null;
@@ -659,7 +676,7 @@ export type CommentListQuery = {
 };
 
 export type DetailCriteriaQueryVariables = Exact<{
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 }>;
 
 export type DetailCriteriaQuery = {
@@ -807,7 +824,7 @@ export type DetailLecturerQuery = {
 		learning?: string | null;
 		learning_position?: string | null;
 		lecturer_id: number;
-		mscb?: number | null;
+		mscb?: string | null;
 		ngach?: string | null;
 		phone?: string | null;
 		position?: string | null;
@@ -835,7 +852,7 @@ export type AllLecturersQuery = {
 			learning?: string | null;
 			learning_position?: string | null;
 			lecturer_id: number;
-			mscb?: number | null;
+			mscb?: string | null;
 			ngach?: string | null;
 			phone?: string | null;
 			position?: string | null;
@@ -865,7 +882,7 @@ export type LecturerstWithPointsQuery = {
 			learning?: string | null;
 			learning_position?: string | null;
 			lecturer_id: number;
-			mscb?: number | null;
+			mscb?: string | null;
 			ngach?: string | null;
 			phone?: string | null;
 			position?: string | null;
@@ -932,7 +949,7 @@ export type LoginMutation = {
 				learning?: string | null;
 				learning_position?: string | null;
 				lecturer_id: number;
-				mscb?: number | null;
+				mscb?: string | null;
 				ngach?: string | null;
 				phone?: string | null;
 				position?: string | null;
@@ -993,6 +1010,7 @@ export type PointsWithGroupByQuery = {
 			__typename?: "GroupedPoint";
 			average_point: number;
 			class_num: number;
+			mscb: string;
 			display_name?: string | null;
 			id: number;
 			max_point?: number | null;

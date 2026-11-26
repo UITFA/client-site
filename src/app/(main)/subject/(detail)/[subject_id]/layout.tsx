@@ -75,16 +75,3 @@ interface ISubjectInfo {
 	faculty_id: string;
 	faculty_name: string;
 }
-
-// export async function generateMetadata({
-// 	params: { subject_id },
-// }: {
-// 	params: { subject_id: string };
-// }) {
-// 	const res = await fetch(`${GET_SUBJECT_INFO}/${subject_id}`);
-// 	const { subject_name }: ISubjectInfo = await res.json();
-
-// 	return {
-// 		title: `${subject_name} - AQA`,
-// 	};
-// }

@@ -17,14 +17,14 @@ export function useFilterUrlQuery() {
 		params.has("tree")
 			? JSON.parse(decodeURI(params.get("tree")?.toString() || ""))
 			: {
-					criteria_id: "",
-					semester_id: "",
-					faculty_id: "",
+					criteria_id: null,
+					semester_id: null,
+					faculty_id: null,
 					subjects: undefined,
-					lecturer_id: "",
+					lecturer_id: null,
 					program: "",
 					class_type: "",
-					class_id: "",
+					class_id: null,
 			  }
 	);
 
