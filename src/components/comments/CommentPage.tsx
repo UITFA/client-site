@@ -8,22 +8,54 @@ import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultyS
 import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
 import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
 import { SingleSubjectSelectorWithSearchParam } from "@/components/selectors/SingleSubjectSelector";
+import { useCommentListLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Button, Modal, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { transformCommentData } from "./interfaces/IComment";
 
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
-	const [query, setQuery] = useState({
+	const URL = process.env.BASE_API_URL;
+
+	const searchParams = useSearchParams();
+
+	const query = {
 		...defaultFilter,
-		keyword: "",
-		semester_id: selectors.includes("semester") ? "" : undefined,
-		program: selectors.includes("program") ? "" : undefined,
-		faculty_id: selectors.includes("faculty") ? "" : undefined,
-		subjects: selectors.includes("single-subject") ? [] : undefined,
+		keyword: searchParams.get("keyword"),
+		semester_id: selectors.includes("semester")
+			? searchParams.get("semester")
+			: undefined,
+		program: selectors.includes("program")
+			? searchParams.get("program")
+			: undefined,
+		faculty_id: selectors.includes("faculty")
+			? searchParams.get("faculty")
+			: undefined,
+		subjects: selectors.includes("single-subject")
+			? searchParams.get("subject_id")
+				? [searchParams.get("subject_id")]
+				: undefined
+			: undefined,
+		sentiment: selectors.includes("single-subject")
+			? searchParams.get("sentiment")
+				? [searchParams.get("sentiment")]
+				: undefined
+			: undefined,
+	};
+	const [getCommentList, { data, loading: isLoading }] = useCommentListLazyQuery({
+		fetchPolicy: "cache-and-network",
 	});
 
-	const [isLoading, setIsLoading] = useState(false);
-	const [comments, setComments] = useState([]);
+	const { dataList: comments, bottomRef } = useInfiniteScroll({
+		queryFunction: getCommentList,
+		variables: { filter: query },
+		isLoading,
+		data: data?.comments.data,
+		meta: data?.comments.meta,
+	});
+
 	const [activeTab, setActiveTab] = useState(0);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
@@ -35,31 +67,6 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		if (event.target.files && event.target.files[0]) {
 			setFile(event.target.files[0]);
 		}
-	};
-	// Fetch comments data
-	const fetchComments = async () => {
-		setIsLoading(true);
-		try {
-			const response = await fetch(`http://localhost:4001/comments`);
-			const data = await response.json();
-			setComments(data.data || []);
-		} catch (error) {
-			console.error("Error fetching comments:", error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchComments();
-	}, [query]);
-
-	// Handle search
-	const handleSearch = (keyword: string) => {
-		setQuery((prev: QueryType) => ({
-			...prev,
-			keyword,
-		}));
 	};
 
 	// Handle tab change
@@ -78,18 +85,13 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 			const formData = new FormData();
 			formData.append("file", file);
 
-			const response = await fetch("http://localhost:4001/files/import", {
+			fetch(`${URL}/files/import`, {
 				method: "POST",
 				body: formData,
 			});
 
-			if (!response.ok) {
-				throw new Error("Import failed");
-			}
-
-			alert("Import thành công!");
+			alert("Hệ thống đang xử lý, vui lòng quay lại sau ít phút nữa");
 			setIsModalVisible(false);
-			fetchComments();
 		} catch (error) {
 			console.error("Error during import:", error);
 			alert("Import thất bại, vui lòng thử lại.");
@@ -97,6 +99,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 			handleCloseModal();
 		}
 	};
+
 	return (
 		<div className="p-6 bg-gray-50 min-h-screen">
 			{/* Header */}
@@ -118,7 +121,13 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 						/>
 					)}
 				</div>
+				<div className="flex flex-row gap-5">
+					<CommentSearchBar isLoading={!isLoading} />
+					<ImportButton handleClick={handleOpenModal} />
+				</div>
 			</div>
+
+			{/* Modal */}
 			<Modal
 				open={isModalVisible}
 				onClose={handleCloseModal}
@@ -191,16 +200,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 					</div>
 				</Box>
 			</Modal>
-			<div className="flex flex-row gap-5">
-				<CommentSearchBar isLoading={isLoading} onSearch={handleSearch} />
-				<ImportButton handleClick={handleOpenModal} />
-			</div>
-			{/* Modal nhập dữ liệu
-			<ImportModal
-				isVisible={isModalVisible}
-				onClose={() => setIsModalVisible(false)}
-				onImport={handleImportFile}
-			/> */}
+
 			{/* Tabs */}
 			<Box sx={{ borderBottom: 1, borderColor: "divider", marginTop: "20px" }}>
 				<Tabs
@@ -212,10 +212,19 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 					<Tab label="Danh sách bình luận" />
 				</Tabs>
 			</Box>
-			{/* Nội dung của từng tab */}
+
+			{/* Tab Content */}
 			{activeTab === 0 && (
 				<div className="mt-4">
-					<CommentChart response={{ data: comments }} />
+					{data?.comments?.data ? (
+						<CommentChart
+							response={{
+								data: transformCommentData(data?.comments.data),
+							}}
+						/>
+					) : (
+						<p>Đang tải dữ liệu...</p>
+					)}
 				</div>
 			)}
 			{activeTab === 1 && (
@@ -230,10 +239,4 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 interface IProps {
 	defaultFilter?: any;
 	selectors?: string[];
-}
-
-interface QueryType {
-	keyword?: string;
-	semester_id?: number | null;
-	aspect?: string;
 }

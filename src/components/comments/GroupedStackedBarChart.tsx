@@ -5,11 +5,11 @@ const CombinedBarLineChart = ({ data }: { data: Comment[] }) => {
 	const barData = data.reduce<
 		Record<string, { semester: string; aspect: string; value: number }>
 	>((acc, curr) => {
-		const key = `${curr.semester.display_name}-${curr.aspect}`;
+		const key = `${curr?.semester?.display_name}-${curr.aspect}`;
 		if (!acc[key]) {
 			acc[key] = {
-				semester: curr.semester.display_name,
-				aspect: curr.aspect,
+				semester: curr?.semester?.display_name,
+				aspect: curr?.aspect,
 				value: 1,
 			};
 		} else {
@@ -25,11 +25,11 @@ const CombinedBarLineChart = ({ data }: { data: Comment[] }) => {
 	const lineData = data.reduce<
 		Record<string, { semester: string; sentiment: string; value: number }>
 	>((acc, curr) => {
-		const key = `${curr.semester.display_name}-${curr.sentiment}`;
+		const key = `${curr?.semester?.display_name}-${curr?.sentiment}`;
 		if (!acc[key]) {
 			acc[key] = {
-				semester: curr.semester.display_name,
-				sentiment: curr.sentiment,
+				semester: curr?.semester?.display_name,
+				sentiment: curr?.sentiment,
 				value: 1,
 			};
 		} else {
