@@ -14,8 +14,8 @@ function SemesterClass({
 	lecturer_id,
 	onPress,
 }: {
-	semester_id: string;
-	lecturer_id: string;
+	semester_id: number;
+	lecturer_id: number;
 	onPress: (id: string) => any;
 }) {
 	const { query } = useFilterUrlQuery();

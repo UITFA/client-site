@@ -1,4 +1,4 @@
-query DetailSubject($id: String!) {
+query DetailSubject($id: Int!) {
 	subject(id: $id) {
 		display_name
 		faculty_id

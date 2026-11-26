@@ -2,15 +2,11 @@
 
 import ChartLayout from "@/components/chart/ChartLayout";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import {
-	FilterArgs,
-	GroupedPoint,
-	usePointsWithGroupByLazyQuery,
-} from "@/gql/graphql";
+import { FilterArgs, usePointsWithGroupByLazyQuery } from "@/gql/graphql";
 import { sortSemester } from "@/utils/sortSemester";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
-import { AreaChart, BarChart, Color, LineChart } from "@tremor/react";
+import { Color, LineChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 
 type Props = {

@@ -1,8 +1,8 @@
-import { Role, useProfileQuery } from "@/gql/graphql";
+import { Role } from "@/gql/graphql";
 import { useAuth } from "@/stores/auth.store";
 
 export default function getLecturerName(lecturer: {
-	lecturer_id?: string | null;
+	lecturer_id?: number | null;
 	display_name?: string | null;
 }) {
 	const { authData } = useAuth.getState();

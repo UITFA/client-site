@@ -11,7 +11,7 @@ query AllClasses($filter: FilterArgs, $sort: SortArgs) {
 	}
 }
 
-query DetailClass($id: String!) {
+query DetailClass($id: Int!) {
 	class(id: $id) {
 		class_id
 		class_type

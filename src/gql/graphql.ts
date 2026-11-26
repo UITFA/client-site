@@ -34,7 +34,7 @@ export type AuthDto = {
 
 export type Class = {
 	__typename?: "Class";
-	class_id: Scalars["String"]["output"];
+	class_id: Scalars["Int"]["output"];
 	class_type: Scalars["String"]["output"];
 	display_name: Scalars["String"]["output"];
 	lecturer: Lecturer;
@@ -47,24 +47,27 @@ export type Class = {
 };
 
 export type ClassPointsArgs = {
-	class_id?: InputMaybe<Scalars["String"]["input"]>;
+	class_id?: InputMaybe<Scalars["Int"]["input"]>;
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
 	keyword?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type Comment = {
 	__typename?: "Comment";
 	class?: Maybe<Class>;
-	comment_id: Scalars["String"]["output"];
+	classId: Scalars["Int"]["output"];
+	comment_id: Scalars["Int"]["output"];
 	display_name: Scalars["String"]["output"];
 	sentiment: Scalars["String"]["output"];
 	aspect: Scalars["String"]["output"];
+	semester?: Maybe<Class>;
+	semester_id: Scalars["Int"]["output"];
 };
 
 export type CommentQuantity = {
@@ -76,7 +79,7 @@ export type CommentQuantity = {
 
 export type Criteria = {
 	__typename?: "Criteria";
-	criteria_id: Scalars["String"]["output"];
+	criteria_id: Scalars["Int"]["output"];
 	display_name: Scalars["String"]["output"];
 	index?: Maybe<Scalars["Int"]["output"]>;
 	semester: Array<Semester>;
@@ -92,7 +95,7 @@ export type CriteriaProperty = {
 export type Faculty = {
 	__typename?: "Faculty";
 	display_name: Scalars["String"]["output"];
-	faculty_id: Scalars["String"]["output"];
+	faculty_id: Scalars["Int"]["output"];
 	full_name?: Maybe<Scalars["String"]["output"]>;
 	is_displayed?: Maybe<Scalars["Boolean"]["output"]>;
 	lecturers?: Maybe<PaginatedLecturer>;
@@ -108,14 +111,14 @@ export type FacultyLecturersArgs = {
 };
 
 export type FacultyPointsArgs = {
-	class_id?: InputMaybe<Scalars["String"]["input"]>;
+	class_id?: InputMaybe<Scalars["Int"]["input"]>;
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
 	keyword?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -126,26 +129,26 @@ export type FacultySubjectsArgs = {
 };
 
 export type FacultyTotal_PointArgs = {
-	class_id?: InputMaybe<Scalars["String"]["input"]>;
+	class_id?: InputMaybe<Scalars["Int"]["input"]>;
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
 	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
 	keyword?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type FilterArgs = {
-	class_id?: InputMaybe<Scalars["String"]["input"]>;
+	class_id?: InputMaybe<Scalars["Int"]["input"]>;
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
 	keyword?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
@@ -166,11 +169,11 @@ export type Lecturer = {
 	display_name?: Maybe<Scalars["String"]["output"]>;
 	email?: Maybe<Scalars["String"]["output"]>;
 	faculty: Faculty;
-	faculty_id?: Maybe<Scalars["String"]["output"]>;
+	faculty_id?: Maybe<Scalars["Int"]["output"]>;
 	gender?: Maybe<Scalars["Boolean"]["output"]>;
 	learning?: Maybe<Scalars["String"]["output"]>;
 	learning_position?: Maybe<Scalars["String"]["output"]>;
-	lecturer_id: Scalars["String"]["output"];
+	lecturer_id: Scalars["Int"]["output"];
 	mscb?: Maybe<Scalars["Int"]["output"]>;
 	ngach?: Maybe<Scalars["String"]["output"]>;
 	phone?: Maybe<Scalars["String"]["output"]>;
@@ -313,7 +316,7 @@ export type Query = {
 };
 
 export type QueryClassArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QueryClassesArgs = {
@@ -323,7 +326,7 @@ export type QueryClassesArgs = {
 };
 
 export type QueryCommentArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QueryCommentQuantityArgs = {
@@ -341,7 +344,7 @@ export type QueryCommentsArgs = {
 };
 
 export type QueryCriteriaArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QueryCriteriasArgs = {
@@ -357,26 +360,26 @@ export type QueryFacultiesArgs = {
 };
 
 export type QueryFacultyArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QueryGroupedPointsArgs = {
-	class_id?: InputMaybe<Scalars["String"]["input"]>;
+	class_id?: InputMaybe<Scalars["Int"]["input"]>;
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
 	groupEntity?: InputMaybe<Scalars["String"]["input"]>;
 	keyword?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	page?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	size?: InputMaybe<Scalars["Int"]["input"]>;
 	subjects?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type QueryLecturerArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QueryLecturersArgs = {
@@ -386,7 +389,7 @@ export type QueryLecturersArgs = {
 };
 
 export type QuerySubjectArgs = {
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 };
 
 export type QuerySubjectsArgs = {
@@ -409,7 +412,7 @@ export enum Role {
 export type Semester = {
 	__typename?: "Semester";
 	display_name: Scalars["String"]["output"];
-	semester_id: Scalars["String"]["output"];
+	semester_id: Scalars["Int"]["output"];
 	type?: Maybe<Scalars["String"]["output"]>;
 	year?: Maybe<Scalars["String"]["output"]>;
 };
@@ -428,9 +431,9 @@ export type Subject = {
 	__typename?: "Subject";
 	display_name?: Maybe<Scalars["String"]["output"]>;
 	faculty?: Maybe<Faculty>;
-	faculty_id?: Maybe<Scalars["String"]["output"]>;
+	faculty_id?: Maybe<Scalars["Int"]["output"]>;
 	points?: Maybe<Array<GroupedPoint>>;
-	subject_id: Scalars["String"]["output"];
+	subject_id: Scalars["Int"]["output"];
 	total_point?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -442,10 +445,10 @@ export type SubjectPointsArgs = {
 
 export type UpdateUserDto = {
 	displayName?: InputMaybe<Scalars["String"]["input"]>;
-	facultyId?: InputMaybe<Scalars["String"]["input"]>;
+	facultyId?: InputMaybe<Scalars["Int"]["input"]>;
 	id: Scalars["String"]["input"];
 	lastAccess?: InputMaybe<Scalars["DateTime"]["input"]>;
-	lecturerId?: InputMaybe<Scalars["String"]["input"]>;
+	lecturerId?: InputMaybe<Scalars["Int"]["input"]>;
 	password?: InputMaybe<Scalars["String"]["input"]>;
 	role?: InputMaybe<Role>;
 	username?: InputMaybe<Scalars["String"]["input"]>;
@@ -453,8 +456,8 @@ export type UpdateUserDto = {
 
 export type UserDto = {
 	displayName?: InputMaybe<Scalars["String"]["input"]>;
-	facultyId?: InputMaybe<Scalars["String"]["input"]>;
-	lecturerId?: InputMaybe<Scalars["String"]["input"]>;
+	facultyId?: InputMaybe<Scalars["Int"]["input"]>;
+	lecturerId?: InputMaybe<Scalars["Int"]["input"]>;
 	password: Scalars["String"]["input"];
 	role: Role;
 	username: Scalars["String"]["input"];
@@ -483,7 +486,7 @@ export type AllClassesQuery = {
 		__typename?: "PaginatedClass";
 		data: Array<{
 			__typename?: "Class";
-			class_id: string;
+			class_id: number;
 			class_type: string;
 			display_name: string;
 			participating_student: number;
@@ -494,14 +497,14 @@ export type AllClassesQuery = {
 };
 
 export type DetailClassQueryVariables = Exact<{
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 }>;
 
 export type DetailClassQuery = {
 	__typename?: "Query";
 	class?: {
 		__typename?: "Class";
-		class_id: string;
+		class_id: number;
 		class_type: string;
 		display_name: string;
 		participating_student: number;
@@ -512,11 +515,11 @@ export type DetailClassQuery = {
 			birth_date?: any | null;
 			display_name?: string | null;
 			email?: string | null;
-			faculty_id?: string | null;
+			faculty_id?: number | null;
 			gender?: boolean | null;
 			learning?: string | null;
 			learning_position?: string | null;
-			lecturer_id: string;
+			lecturer_id: number;
 			mscb?: number | null;
 			ngach?: string | null;
 			phone?: string | null;
@@ -527,20 +530,20 @@ export type DetailClassQuery = {
 		subject: {
 			__typename?: "Subject";
 			display_name?: string | null;
-			faculty_id?: string | null;
-			subject_id: string;
+			faculty_id?: number | null;
+			subject_id: number;
 			total_point?: number | null;
 			faculty?: {
 				__typename?: "Faculty";
 				display_name: string;
-				faculty_id: string;
+				faculty_id: number;
 				full_name?: string | null;
 			} | null;
 		};
 		semester: {
 			__typename?: "Semester";
 			display_name: string;
-			semester_id: string;
+			semester_id: number;
 			type?: string | null;
 			year?: string | null;
 		};
@@ -549,7 +552,7 @@ export type DetailClassQuery = {
 			average_point: number;
 			class_num: number;
 			display_name?: string | null;
-			id: string;
+			id: number;
 			max_point?: number | null;
 			point?: number | null;
 		}>;
@@ -592,12 +595,12 @@ export type CommentListQuery = {
 		__typename?: "PaginatedComment";
 		data: Array<{
 			__typename?: "Comment";
-			comment_id: string;
+			comment_id: number;
 			content: string;
 			type: string;
 			class?: {
 				__typename?: "Class";
-				class_id: string;
+				class_id: number;
 				class_type: string;
 				display_name: string;
 				participating_student: number;
@@ -608,12 +611,12 @@ export type CommentListQuery = {
 					birth_date?: any | null;
 					display_name?: string | null;
 					email?: string | null;
-					faculty_id?: string | null;
+					faculty_id?: number | null;
 					gender?: boolean | null;
 					learning?: string | null;
 					learning_position?: string | null;
-					class_id: string;
-					lecturer_id: string;
+					class_id: number;
+					lecturer_id: number;
 					mscb?: number | null;
 					ngach?: string | null;
 					phone?: string | null;
@@ -624,20 +627,20 @@ export type CommentListQuery = {
 				subject: {
 					__typename?: "Subject";
 					display_name?: string | null;
-					faculty_id?: string | null;
-					subject_id: string;
+					faculty_id?: number | null;
+					subject_id: number;
 					total_point?: number | null;
 					faculty?: {
 						__typename?: "Faculty";
 						display_name: string;
-						faculty_id: string;
+						faculty_id: number;
 						full_name?: string | null;
 					} | null;
 				};
 				semester: {
 					__typename?: "Semester";
 					display_name: string;
-					semester_id: string;
+					semester_id: number;
 					type?: string | null;
 					year?: string | null;
 				};
@@ -663,13 +666,13 @@ export type DetailCriteriaQuery = {
 	__typename?: "Query";
 	criteria?: {
 		__typename?: "Criteria";
-		criteria_id: string;
+		criteria_id: number;
 		display_name: string;
 		index?: number | null;
 		semester: Array<{
 			__typename?: "Semester";
 			display_name: string;
-			semester_id: string;
+			semester_id: number;
 			type?: string | null;
 			year?: string | null;
 		}>;
@@ -687,7 +690,7 @@ export type AllCriteriasQuery = {
 		data: Array<{
 			__typename?: "Criteria";
 			display_name: string;
-			criteria_id: string;
+			criteria_id: number;
 			type: Array<{
 				__typename?: "CriteriaProperty";
 				class_type: string;
@@ -719,7 +722,7 @@ export type CriteriasQuery = {
 		data: Array<{
 			__typename?: "Criteria";
 			display_name: string;
-			criteria_id: string;
+			criteria_id: number;
 		}>;
 		meta: {
 			__typename?: "PaginatedMetaData";
@@ -735,8 +738,8 @@ export type CriteriasQuery = {
 
 export type OverallCriteriaPointsEachSemesterQueryVariables = Exact<{
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
 	subjects?: InputMaybe<
 		Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
@@ -752,7 +755,7 @@ export type OverallCriteriaPointsEachSemesterQuery = {
 			average_point: number;
 			class_num: number;
 			display_name?: string | null;
-			id: string;
+			id: number;
 			max_point?: number | null;
 			point?: number | null;
 		}>;
@@ -768,14 +771,14 @@ export type FacultiesQuery = {
 		data: Array<{
 			__typename?: "Faculty";
 			display_name: string;
-			faculty_id: string;
+			faculty_id: number;
 			full_name?: string | null;
 		}>;
 	};
 };
 
 export type DetailFacultyQueryVariables = Exact<{
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 }>;
 
 export type DetailFacultyQuery = {
@@ -783,13 +786,13 @@ export type DetailFacultyQuery = {
 	faculty?: {
 		__typename?: "Faculty";
 		display_name: string;
-		faculty_id: string;
+		faculty_id: number;
 		full_name?: string | null;
 	} | null;
 };
 
 export type DetailLecturerQueryVariables = Exact<{
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 }>;
 
 export type DetailLecturerQuery = {
@@ -799,11 +802,11 @@ export type DetailLecturerQuery = {
 		birth_date?: any | null;
 		display_name?: string | null;
 		email?: string | null;
-		faculty_id?: string | null;
+		faculty_id?: number | null;
 		gender?: boolean | null;
 		learning?: string | null;
 		learning_position?: string | null;
-		lecturer_id: string;
+		lecturer_id: number;
 		mscb?: number | null;
 		ngach?: string | null;
 		phone?: string | null;
@@ -827,11 +830,11 @@ export type AllLecturersQuery = {
 			birth_date?: any | null;
 			display_name?: string | null;
 			email?: string | null;
-			faculty_id?: string | null;
+			faculty_id?: number | null;
 			gender?: boolean | null;
 			learning?: string | null;
 			learning_position?: string | null;
-			lecturer_id: string;
+			lecturer_id: number;
 			mscb?: number | null;
 			ngach?: string | null;
 			phone?: string | null;
@@ -857,11 +860,11 @@ export type LecturerstWithPointsQuery = {
 			birth_date?: any | null;
 			display_name?: string | null;
 			email?: string | null;
-			faculty_id?: string | null;
+			faculty_id?: number | null;
 			gender?: boolean | null;
 			learning?: string | null;
 			learning_position?: string | null;
-			lecturer_id: string;
+			lecturer_id: number;
 			mscb?: number | null;
 			ngach?: string | null;
 			phone?: string | null;
@@ -871,14 +874,14 @@ export type LecturerstWithPointsQuery = {
 			faculty: {
 				__typename?: "Faculty";
 				display_name: string;
-				faculty_id: string;
+				faculty_id: number;
 				full_name?: string | null;
 			};
 			points: Array<{
 				__typename?: "GroupedPoint";
 				average_point: number;
 				class_num: number;
-				id: string;
+				id: number;
 				max_point?: number | null;
 				point?: number | null;
 				display_name?: string | null;
@@ -916,7 +919,7 @@ export type LoginMutation = {
 			faculty?: {
 				__typename?: "Faculty";
 				display_name: string;
-				faculty_id: string;
+				faculty_id: number;
 				full_name?: string | null;
 				is_displayed?: boolean | null;
 			} | null;
@@ -924,11 +927,11 @@ export type LoginMutation = {
 				__typename?: "Lecturer";
 				display_name?: string | null;
 				email?: string | null;
-				faculty_id?: string | null;
+				faculty_id?: number | null;
 				gender?: boolean | null;
 				learning?: string | null;
 				learning_position?: string | null;
-				lecturer_id: string;
+				lecturer_id: number;
 				mscb?: number | null;
 				ngach?: string | null;
 				phone?: string | null;
@@ -943,10 +946,10 @@ export type LoginMutation = {
 export type PointsEachSemesterQueryVariables = Exact<{
 	groupEntity: Scalars["String"]["input"];
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
 	subjects?: InputMaybe<
 		Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
@@ -962,7 +965,7 @@ export type PointsEachSemesterQuery = {
 			average_point: number;
 			class_num: number;
 			display_name?: string | null;
-			id: string;
+			id: number;
 			max_point?: number | null;
 			point?: number | null;
 		}>;
@@ -972,10 +975,10 @@ export type PointsEachSemesterQuery = {
 export type PointsWithGroupByQueryVariables = Exact<{
 	groupEntity: Scalars["String"]["input"];
 	class_type?: InputMaybe<Scalars["String"]["input"]>;
-	faculty_id?: InputMaybe<Scalars["String"]["input"]>;
-	lecturer_id?: InputMaybe<Scalars["String"]["input"]>;
-	criteria_id?: InputMaybe<Scalars["String"]["input"]>;
-	semester_id?: InputMaybe<Scalars["String"]["input"]>;
+	faculty_id?: InputMaybe<Scalars["Int"]["input"]>;
+	lecturer_id?: InputMaybe<Scalars["Int"]["input"]>;
+	criteria_id?: InputMaybe<Scalars["Int"]["input"]>;
+	semester_id?: InputMaybe<Scalars["Int"]["input"]>;
 	program?: InputMaybe<Scalars["String"]["input"]>;
 	subjects?: InputMaybe<
 		Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
@@ -991,7 +994,7 @@ export type PointsWithGroupByQuery = {
 			average_point: number;
 			class_num: number;
 			display_name?: string | null;
-			id: string;
+			id: number;
 			max_point?: number | null;
 			point?: number | null;
 		}>;
@@ -1012,14 +1015,14 @@ export type SemestersQuery = {
 	semesters?: Array<{
 		__typename?: "Semester";
 		display_name: string;
-		semester_id: string;
+		semester_id: number;
 		type?: string | null;
 		year?: string | null;
 	}> | null;
 };
 
 export type DetailSubjectQueryVariables = Exact<{
-	id: Scalars["String"]["input"];
+	id: Scalars["Int"]["input"];
 }>;
 
 export type DetailSubjectQuery = {
@@ -1027,13 +1030,13 @@ export type DetailSubjectQuery = {
 	subject?: {
 		__typename?: "Subject";
 		display_name?: string | null;
-		faculty_id?: string | null;
-		subject_id: string;
+		faculty_id?: number | null;
+		subject_id: number;
 		total_point?: number | null;
 		faculty?: {
 			__typename?: "Faculty";
 			display_name: string;
-			faculty_id: string;
+			faculty_id: number;
 			full_name?: string | null;
 			is_displayed?: boolean | null;
 		} | null;
@@ -1053,13 +1056,13 @@ export type SubjectsQuery = {
 		data: Array<{
 			__typename?: "Subject";
 			display_name?: string | null;
-			faculty_id?: string | null;
-			subject_id: string;
+			faculty_id?: number | null;
+			subject_id: number;
 			total_point?: number | null;
 			faculty?: {
 				__typename?: "Faculty";
 				display_name: string;
-				faculty_id: string;
+				faculty_id: number;
 				full_name?: string | null;
 			} | null;
 		}>;
@@ -1087,8 +1090,8 @@ export type AllSubjectsQuery = {
 		data: Array<{
 			__typename?: "Subject";
 			display_name?: string | null;
-			faculty_id?: string | null;
-			subject_id: string;
+			faculty_id?: number | null;
+			subject_id: number;
 			total_point?: number | null;
 		}>;
 	};
@@ -1107,13 +1110,13 @@ export type SubjectsWithPointsQuery = {
 		data: Array<{
 			__typename?: "Subject";
 			display_name?: string | null;
-			faculty_id?: string | null;
-			subject_id: string;
+			faculty_id?: number | null;
+			subject_id: number;
 			total_point?: number | null;
 			faculty?: {
 				__typename?: "Faculty";
 				display_name: string;
-				faculty_id: string;
+				faculty_id: number;
 				full_name?: string | null;
 			} | null;
 			points?: Array<{
@@ -1155,7 +1158,7 @@ export type UsersQuery = {
 		faculty?: {
 			__typename?: "Faculty";
 			display_name: string;
-			faculty_id: string;
+			faculty_id: number;
 			full_name?: string | null;
 			is_displayed?: boolean | null;
 		} | null;
@@ -1164,11 +1167,11 @@ export type UsersQuery = {
 			birth_date?: any | null;
 			display_name?: string | null;
 			email?: string | null;
-			faculty_id?: string | null;
+			faculty_id?: number | null;
 			gender?: boolean | null;
 			learning?: string | null;
 			learning_position?: string | null;
-			lecturer_id: string;
+			lecturer_id: number;
 			mscb?: number | null;
 			ngach?: string | null;
 			phone?: string | null;
@@ -1193,7 +1196,7 @@ export type ProfileQuery = {
 		faculty?: {
 			__typename?: "Faculty";
 			display_name: string;
-			faculty_id: string;
+			faculty_id: number;
 			full_name?: string | null;
 			is_displayed?: boolean | null;
 		} | null;
@@ -1201,11 +1204,11 @@ export type ProfileQuery = {
 			__typename?: "Lecturer";
 			display_name?: string | null;
 			email?: string | null;
-			faculty_id?: string | null;
+			faculty_id?: number | null;
 			gender?: boolean | null;
 			learning?: string | null;
 			learning_position?: string | null;
-			lecturer_id: string;
+			lecturer_id: number;
 			mscb?: number | null;
 			ngach?: string | null;
 			phone?: string | null;
@@ -1334,7 +1337,7 @@ export function refetchAllClassesQuery(variables?: AllClassesQueryVariables) {
 	return { query: AllClassesDocument, variables: variables };
 }
 export const DetailClassDocument = gql`
-	query DetailClass($id: String!) {
+	query DetailClass($id: Int!) {
 		class(id: $id) {
 			class_id
 			class_type
@@ -1950,10 +1953,10 @@ export function refetchCriteriasQuery(variables?: CriteriasQueryVariables) {
 export const OverallCriteriaPointsEachSemesterDocument = gql`
 	query OverallCriteriaPointsEachSemester(
 		$class_type: String
-		$faculty_id: String
-		$lecturer_id: String
+		$faculty_id: Int
+		$lecturer_id: Int
 		$program: String
-		$subjects: [String!]
+		$subjects: [Int!]
 	) {
 		groupedPoints(
 			groupEntity: "Semester"
@@ -2206,7 +2209,7 @@ export function refetchDetailFacultyQuery(variables: DetailFacultyQueryVariables
 	return { query: DetailFacultyDocument, variables: variables };
 }
 export const DetailLecturerDocument = gql`
-	query DetailLecturer($id: String!) {
+	query DetailLecturer($id: Int!) {
 		lecturer(id: $id) {
 			birth_date
 			display_name
@@ -2589,12 +2592,12 @@ export const PointsEachSemesterDocument = gql`
 	query PointsEachSemester(
 		$groupEntity: String!
 		$class_type: String
-		$faculty_id: String
-		$lecturer_id: String
-		$criteria_id: String
-		$semester_id: String
+		$faculty_id: Int
+		$lecturer_id: Int
+		$criteria_id: Int
+		$semester_id: Int
 		$program: String
-		$subjects: [String!]
+		$subjects: [Int!]
 	) {
 		groupedPoints(
 			groupEntity: $groupEntity
@@ -2704,12 +2707,12 @@ export const PointsWithGroupByDocument = gql`
 	query PointsWithGroupBy(
 		$groupEntity: String!
 		$class_type: String
-		$faculty_id: String
-		$lecturer_id: String
-		$criteria_id: String
-		$semester_id: String
+		$faculty_id: Int
+		$lecturer_id: Int
+		$criteria_id: Int
+		$semester_id: Int
 		$program: String
-		$subjects: [String!]
+		$subjects: [Int!]
 	) {
 		groupedPoints(
 			groupEntity: $groupEntity

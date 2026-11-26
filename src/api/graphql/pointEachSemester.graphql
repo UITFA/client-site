@@ -1,12 +1,12 @@
 query PointsEachSemester(
 	$groupEntity: String!
 	$class_type: String
-	$faculty_id: String
-	$lecturer_id: String
-	$criteria_id: String
-	$semester_id: String
+	$faculty_id: Int
+	$lecturer_id: Int
+	$criteria_id: Int
+	$semester_id: Int
 	$program: String
-	$subjects: [String!]
+	$subjects: [Int!]
 ) {
 	groupedPoints(
 		groupEntity: $groupEntity
@@ -33,12 +33,12 @@ query PointsEachSemester(
 query PointsWithGroupBy(
 	$groupEntity: String!
 	$class_type: String
-	$faculty_id: String
-	$lecturer_id: String
-	$criteria_id: String
-	$semester_id: String
+	$faculty_id: Int
+	$lecturer_id: Int
+	$criteria_id: Int
+	$semester_id: Int
 	$program: String
-	$subjects: [String!]
+	$subjects: [Int!]
 ) {
 	groupedPoints(
 		groupEntity: $groupEntity

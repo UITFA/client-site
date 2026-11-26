@@ -1,4 +1,4 @@
-query DetailCriteria($id: String!) {
+query DetailCriteria($id: Int!) {
 	criteria(id: $id) {
 		criteria_id
 		display_name
@@ -56,10 +56,10 @@ query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
 
 query OverallCriteriaPointsEachSemester(
 	$class_type: String
-	$faculty_id: String
-	$lecturer_id: String
+	$faculty_id: Int
+	$lecturer_id: Int
 	$program: String
-	$subjects: [String!]
+	$subjects: [Int!]
 ) {
 	groupedPoints(
 		groupEntity: "Semester"

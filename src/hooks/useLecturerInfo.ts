@@ -1,7 +1,7 @@
 import { Lecturer, useDetailLecturerQuery } from "@/gql/graphql";
 import getLecturerName from "@/utils/getLecturerName";
 
-export default function useLecturerInfo(lecturerId: string) {
+export default function useLecturerInfo(lecturerId: number) {
 	const { data, loading } = useDetailLecturerQuery({
 		variables: { id: lecturerId },
 	});

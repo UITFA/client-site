@@ -8,7 +8,7 @@ query Faculties {
 	}
 }
 
-query DetailFaculty($id: String!) {
+query DetailFaculty($id: Int!) {
 	faculty(id: $id) {
 		display_name
 		faculty_id

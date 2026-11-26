@@ -1,4 +1,4 @@
-query DetailLecturer($id: String!) {
+query DetailLecturer($id: Int!) {
 	lecturer(id: $id) {
 		birth_date
 		display_name
