@@ -38,7 +38,7 @@ export default function AspectTag({
 				disabled={isLoading}
 				className=""
 				variant="shadow"
-				color="gray"
+				color="default"
 				size="md"
 			>
 				{isLoading ? (

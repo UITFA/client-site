@@ -65,7 +65,10 @@ function Inner({ defaultFilter, selectors }: Props) {
 					{selectors}
 				</div>
 			</div>
-			<CommentSearchBar isLoading={isLoading} />
+			<CommentSearchBar
+				isLoading={isLoading}
+				onSearch={(keyword) => console.log(keyword)}
+			/>
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
 					({ comment_id, content: content, type, class: class_ }) => (
