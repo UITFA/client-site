@@ -16,7 +16,7 @@ const CombinedBarLineChart = ({ data }: { data: Comment[] }) => {
 			acc[key].value += 1;
 		}
 		return acc;
-	});
+	}, {});
 
 	const barChartData = Object.values(barData).sort((a, b) =>
 		a.semester.localeCompare(b.semester)
